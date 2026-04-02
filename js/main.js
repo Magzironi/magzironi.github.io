@@ -1,32 +1,28 @@
-import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@7.4.2/dist/pixi.mjs";
+import * as PIXI from "https://jsdelivr.net";
 
-console.log("JS is running");
+// 1. Initialize the app
+const app = new PIXI.Application({
+    background: '#1099bb',
+    resizeTo: window,
+});
 
-// Using an async function is the safest way to ensure PIXI is ready
-async function init() {
-    const app = new PIXI.Application({
-        background: '#1099bb', // v7 uses 'background' or 'backgroundColor'
-        resizeTo: window
-    });
+// 2. Add it to your div
+document.getElementById("pixi-canvas").appendChild(app.view);
 
-    // Wait for the app to be ready (Critical for modern browser stability)
-    await app.init; 
+// 3. Create the square
+const graphics = new PIXI.Graphics();
+graphics.beginFill(0xFFFF00); // Yellow
+graphics.drawRect(0, 0, 200, 200);
+graphics.endFill();
 
-    // Add the canvas to your div
-    // Note: In v7 it is app.view; in v8 it changed to app.canvas
-    document.getElementById("pixi-canvas").appendChild(app.view);
+// 4. Center it a bit better
+graphics.x = 100;
+graphics.y = 100;
 
-    // Draw rectangle
-    const graphics = new PIXI.Graphics();
-    graphics.beginFill(0xFFFF00); // Yellow
-    graphics.drawRect(0, 0, 200, 200);
-    graphics.endFill();
+// 5. Add to stage
+app.stage.addChild(graphics);
 
-    graphics.x = 100;
-    graphics.y = 100;
+// PRO TIP: If it's still blank, force a render update
+app.renderer.render(app.stage);
 
-    app.stage.addChild(graphics);
-    console.log("Graphics added to stage");
-}
-
-init();
+console.log("Canvas width:", app.screen.width);
