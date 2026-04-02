@@ -1,19 +1,15 @@
+import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@7.4.2/dist/pixi.mjs";
+
 console.log("JS is running");
 
-// Create app (Pixi v7 style)
+// Create app
 const app = new PIXI.Application({
     backgroundColor: 0x1099bb,
     resizeTo: window
 });
 
-// Add canvas to page
-const container = document.getElementById('pixi-canvas');
-
-if (!container) {
-    console.error("No container found!");
-} else {
-    container.appendChild(app.canvas);
-}
+// Add canvas
+document.getElementById("pixi-canvas").appendChild(app.view);
 
 // Draw rectangle
 const graphics = new PIXI.Graphics();
