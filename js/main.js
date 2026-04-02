@@ -1,35 +1,28 @@
-// This tells the browser where to find the PixiJS engine
-import { Application, Assets, Sprite } from 'https://cloudflare.com';
+// We'll use a direct global reference to avoid import issues
+import 'https://cloudflare.com';
 
 (async () => {
-    // 1. Create a new PixiJS application
-    const app = new Application();
+    // Create the app
+    const app = new PIXI.Application();
 
-    // 2. Initialize the application with a blue background
+    // Initialize it
     await app.init({ 
         background: '#1099bb', 
         resizeTo: window 
     });
 
-    // 3. Add the canvas to your HTML div
+    // Add it to your HTML
     const container = document.getElementById('pixi-canvas');
     if (container) {
         container.appendChild(app.canvas);
-    } else {
-        console.error("Could not find the 'pixi-canvas' div!");
     }
 
-    // 4. Let's add a simple test spinning square
-    const graphics = new PIXI.Graphics();
-    graphics.beginFill(0xFFFF00); // Yellow
-    graphics.drawRect(-25, -25, 50, 50);
-    graphics.endFill();
-    graphics.x = app.screen.width / 2;
-    graphics.y = app.screen.height / 2;
+    // Draw a simple yellow rectangle to prove it works
+    const graphics = new PIXI.Graphics()
+        .rect(0, 0, 200, 200)
+        .fill(0xFFFF00);
+    
+    graphics.x = 100;
+    graphics.y = 100;
     app.stage.addChild(graphics);
-
-    // Make it rotate
-    app.ticker.add((time) => {
-        graphics.rotation += 0.05 * time.deltaTime;
-    });
 })();
