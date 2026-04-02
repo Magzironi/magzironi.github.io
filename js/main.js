@@ -1,11 +1,3 @@
-<div id="pixi-canvas"></div>
-
-<!-- Load PixiJS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/8.0.0/pixi.min.js"></script>
-
-<!-- Your script -->
-<script>
-(async () => {
     console.log("Pixi script running");
 
     // Create the app
@@ -36,5 +28,3 @@
     graphics.y = 100;
 
     app.stage.addChild(graphics);
-})();
-</script>
