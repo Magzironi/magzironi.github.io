@@ -1,24 +1,40 @@
-// We'll use a direct global reference to avoid import issues
-import 'https://cloudflare.com';
+<div id="pixi-canvas"></div>
 
+<!-- Load PixiJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/8.0.0/pixi.min.js"></script>
+
+<!-- Your script -->
+<script>
 (async () => {
+    console.log("Pixi script running");
+
+    // Create the app
     const app = new PIXI.Application();
 
+    // Initialize it
     await app.init({ 
         background: '#1099bb', 
         resizeTo: window 
     });
 
+    // Add canvas to page
     const container = document.getElementById('pixi-canvas');
-    if (container) {
-        container.appendChild(app.canvas);
+
+    if (!container) {
+        console.error("Container not found!");
+        return;
     }
 
+    container.appendChild(app.canvas);
+
+    // Draw a yellow rectangle
     const graphics = new PIXI.Graphics()
         .rect(0, 0, 200, 200)
         .fill(0xFFFF00);
-    
+
     graphics.x = 100;
     graphics.y = 100;
+
     app.stage.addChild(graphics);
 })();
+</script>
