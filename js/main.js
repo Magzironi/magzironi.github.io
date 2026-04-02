@@ -1,28 +1,41 @@
+// Ensure this URL is exactly as shown so the "import" finds the PIXI data
 import * as PIXI from "https://jsdelivr.net";
 
-// 1. Initialize the app
-const app = new PIXI.Application({
-    background: '#1099bb',
-    resizeTo: window,
-});
+async function startPixi() {
+    const app = new PIXI.Application({
+        background: '#1099bb',
+        resizeTo: window
+    });
+    document.getElementById("pixi-canvas").appendChild(app.view);
 
-// 2. Add it to your div
-document.getElementById("pixi-canvas").appendChild(app.view);
+    // --- STEP A: Create the Graphic (The "Drawing") ---
+    const graphics = new PIXI.Graphics();
+    graphics.beginFill(0xFFFF00);
+    graphics.drawRect(0, 0, 100, 100); // A 100x100 square
+    graphics.endFill();
 
-// 3. Create the square
-const graphics = new PIXI.Graphics();
-graphics.beginFill(0xFFFF00); // Yellow
-graphics.drawRect(0, 0, 200, 200);
-graphics.endFill();
+    // --- STEP B: Generate a Texture from that Graphic ---
+    // This turns the "drawing" into a "reusable image" in memory
+    const texture = app.renderer.generateTexture(graphics);
 
-// 4. Center it a bit better
-graphics.x = 100;
-graphics.y = 100;
+    // --- STEP C: Create a Sprite using that Texture ---
+    const squareSprite = new PIXI.Sprite(texture);
 
-// 5. Add to stage
-app.stage.addChild(graphics);
+    // --- STEP D: Setup the Sprite ---
+    // Position it in the center of the screen
+    squareSprite.x = app.screen.width / 2;
+    squareSprite.y = app.screen.height / 2;
+    
+    // Set the "anchor" to 0.5 so it rotates around its center point
+    squareSprite.anchor.set(0.5);
 
-// PRO TIP: If it's still blank, force a render update
-app.renderer.render(app.stage);
+    // Add the SPRITE to the stage (not the graphic!)
+    app.stage.addChild(squareSprite);
 
-console.log("Canvas width:", app.screen.width);
+    // --- STEP E: Animation (Let's make it spin!) ---
+    app.ticker.add((delta) => {
+        squareSprite.rotation += 0.05 * delta;
+    });
+}
+
+startPixi();
