@@ -12,7 +12,7 @@ const container = document.getElementById('pixi-canvas');
 if (!container) {
     console.error("No container found!");
 } else {
-    container.appendChild(app.view);
+    container.appendChild(app.canvas);
 }
 
 // Draw rectangle
