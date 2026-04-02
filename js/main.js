@@ -22,4 +22,5 @@ graphics.y = 100;
 
 app.stage.addChild(graphics);
 
-console.log("Pixi is working");
+console.log("MAIN JS LOADED");
+alert("JS is running");
