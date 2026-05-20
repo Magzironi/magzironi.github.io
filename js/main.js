@@ -11,8 +11,8 @@ canvasEl.width = 150;
 canvasEl.height = 150;
 const ctx = canvasEl.getContext('2d');
 
-// 2. Wrap that hidden canvas into a live PixiJS Texture and Sprite
-const texture = PIXI.Texture.from(canvasEl);
+// 2. MODERN PIXIJS v8 FIX: Use fromSource instead of from() for HTML elements
+const texture = PIXI.Texture.fromSource(canvasEl);
 const shapeSprite = new PIXI.Sprite(texture);
 stage.addChild(shapeSprite);
 
@@ -37,7 +37,6 @@ function animate() {
     shapeSprite.y = 150 + Math.sin(time * 2) * 20;
 
     // --- TASK 2: SHIFT GRADIENT COLORS ---
-    // Smoothly shift green values using sine waves (keeps them in a rich forest palette)
     let lightGreenVal = Math.floor(120 + Math.sin(time) * 50); 
     let darkGreenVal = Math.floor(40 + Math.sin(time + 2) * 20);
     
@@ -54,7 +53,6 @@ function animate() {
     ctx.fillStyle = gradient;
 
     // --- TASK 3: MORPH SHAPES (Square to Round Circle Corners) ---
-    // Math.abs(Math.sin) oscillates smoothly between 0 (Sharp Square) and 50 (Circle)
     let dynamicCornerRadius = Math.abs(Math.sin(time)) * 50;
 
     ctx.beginPath();
