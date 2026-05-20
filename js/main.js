@@ -1,35 +1,19 @@
-// Fixed URL
-import * as PIXI from "https://jsdelivr.net";
+const renderer = new PIXI.WebGLRenderer(); // You should be able to use PIXI.Application() too.
+const options = {width: 500, height: 300}; // Make it any reasonable size you want.
+await renderer.init(options); //passing the initializing options we made above to the renderer, and initializing em.
+await document.getElementById("pixi-canvas").appendChild(renderer.canvas); //here is where we slap the canvas on.
 
-const app = new PIXI.Application({
-    background: '#1099bb',
-    resizeTo: window,
-});
+const stage = new PIXI.Container(); //if you use PIXI.Application(), that already has a "stage" & you use that.
+const sprite = new PIXI.Sprite(renderer.generateTexture(new PIXI.Graphics().beginFill(0X00CCaFF, 1).drawRect(0,0,100,100).endFill()));
+stage.addChild(sprite); //adding the new sprite to the stage (like dragging a node child to node parent)
 
-document.getElementById("pixi-canvas").appendChild(app.view);
+renderer.render(stage); //adding stage to the renderer canvas to be drawn (like adding a node to cocos's Canvas node)
 
-// 1. Create the drawing (Graphics)
-const graphics = new PIXI.Graphics();
-graphics.beginFill(0xFFFF00);
-graphics.drawRect(0, 0, 200, 200);
-graphics.endFill();
+// this function is like a "time" function that continuously runs. The game engine's ticker. This is PIXI's.
+function animate() {
+  renderer.render(stage);
+  requestAnimationFrame(animate);
+}
 
-// 2. CONVERT TO SPRITE (Your friend's suggestion)
-// This turns the drawing into a texture, then into a sprite
-const texture = app.renderer.generateTexture(graphics);
-const squareSprite = new PIXI.Sprite(texture);
-
-// 3. Setup the Sprite
-squareSprite.anchor.set(0.5); // Centers the rotation point
-squareSprite.x = app.screen.width / 2;
-squareSprite.y = app.screen.height / 2;
-
-// 4. Add the SPRITE to the stage
-app.stage.addChild(squareSprite);
-
-// Let's make it spin so you know it's working!
-app.ticker.add((delta) => {
-    squareSprite.rotation += 0.02 * delta;
-});
-
-console.log("Success! Sprite is spinning.");
+requestAnimationFrame(animate); // when we call the ticker, if you have animating elements, they'll animate. Else its just a still image.
+```
