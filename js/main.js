@@ -5,35 +5,41 @@ await document.getElementById("pixi-canvas").appendChild(renderer.canvas);
 
 const stage = new PIXI.Container();
 
-// 1. Create a persistent Graphics object on the stage
+// 1. Setup the empty graphics container on the stage
 const gradientShape = new PIXI.Graphics();
 stage.addChild(gradientShape); 
 
-// Variables to handle speed direction, position, and looping time
-let posX = 0;
+// Variables to handle speed direction and ticking time
 let speedX = 2; 
+let posX = 0; 
 let time = 0;
 
-// 2. The animation loop will clear and redraw the shape on every frame
+// 2. The animation loop clears and redraws the shape with new roundness AND pulsing colors every frame
 function animate() {
-  time += 0.03; // Controls how fast colors shift and shapes morph
+  time += 0.05;
 
-  // --- TASK 1: THE MOVEMENT ENGINE ---
+  // Horizontal Movement Engine
   posX += speedX;
   if (posX > 400 || posX < 0) {
-      speedX *= -1; // Bounce off walls
+      speedX *= -1; 
   }
-  let posY = 100 + Math.sin(time * 2) * 15; // Floating wave motion
 
-  // --- TASK 2: SHIFT GRADIENT COLORS ---
-  // Using sine waves to smoothly cycle green tones
+  // Subtle vertical floating wave motion
+  let posY = 100 + Math.sin(time) * 15;
+
+  // Calculate a changing radius value between 0 (Sharp Square) and 50 (Perfect Circle)
+  let dynamicCornerRadius = Math.abs(Math.sin(time * 0.5)) * 50;
+
+  // --- NEW: DYNAMIC COLOR PULSING ---
+  // Shift the green channel smoothly using sine waves (keeps them inside rich forest tones)
   let lightGreenVal = Math.floor(140 + Math.sin(time) * 40); 
-  let darkGreenVal = Math.floor(40 + Math.sin(time + 2) * 20);
+  let darkGreenVal = Math.floor(40 + Math.sin(time + 1.5) * 20);
 
-  // Generate Hex color formats for PixiJS (e.g., converting values to 0xRRGGBB)
-  let colorStart = (0x14 << 16) | (lightGreenVal << 8) | 0x14;
-  let colorEnd = (0x05 << 16) | (darkGreenVal << 8) | 0x05;
+  // Pack the color channels into PixiJS Hex formats (0xRRGGBB)
+  let colorStart = (0x14 << 16) | (lightGreenVal << 8) | 0x14; // Light Forest Pulse
+  let colorEnd = (0x05 << 16) | (darkGreenVal << 8) | 0x05;   // Dark Pine Pulse
 
+  // Generate the new updating gradient object for this specific frame
   const dynamicGradient = new PIXI.FillGradient({
       type: 'linear',
       start: { x: 0, y: 0 }, 
@@ -44,11 +50,7 @@ function animate() {
       ]
   });
 
-  // --- TASK 3: CHANGING SHAPES (Square to Round Circle Corners) ---
-  // Calculates a changing radius value between 0 (sharp box) and 50 (perfect circle)
-  let dynamicCornerRadius = Math.abs(Math.sin(time)) * 50;
-
-  // Clear previous frame coordinates and draw the new layout
+  // Clear out the previous frame geometry and redraw with the new roundness and color gradient
   gradientShape.clear();
   gradientShape
     .roundRect(posX, posY, 100, 100, dynamicCornerRadius)
